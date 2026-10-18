@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="th" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INT101 Discrete Mathematics Exam Portal</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#0f172a',
+                        },
+                        accent: {
+                            purple: '#8b5cf6',
+                            emerald: '#10b981',
+                            amber: '#f59e0b',
+                            rose: '#f43f5e'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Sarabun', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts: Sarabun & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- KaTeX for Math Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Custom CSS Animations & Flashcard Styles -->
+    <style>
+        body {
+            font-family: 'Sarabun', 'Inter', sans-serif;
+            background-color: #0b0f19;
+            color: #f3f4f6;
+        }
+
+        /* 3D Flashcard Flip Effect */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+
+        /* Glassmorphism utility */
+        .glass-card {
+            background: rgba(17, 24, 39, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-brand-500 selection:text-white">
+
+    <!-- Top Header / Navigation -->
+    <header class="sticky top-0 z-40 w-full glass-card border-b border-gray-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand Title -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('summary')">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-accent-purple flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-brand-500/20">
+                        <i class="fa-solid fa-square-root-variable"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg leading-tight bg-gradient-to-r from-white via-gray-200 to-brand-500 bg-clip-text text-transparent">
+                            INT101 Discrete Math
+                        </h1>
+                        <p class="text-xs text-gray-400">Exam Preparation & Interactive Practice Hub</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs (Desktop) -->
+                <nav class="hidden md:flex items-center space-x-1 bg-gray-900/80 p-1.5 rounded-xl border border-gray-800">
+                    <button onclick="switchTab('summary')" id="nav-summary" class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 text-brand-500 bg-gray-800 shadow-sm">
+                        <i class="fa-solid fa-book-open text-xs"></i> เนื้อหาสรุป
+                    </button>
+                    <button onclick="switchTab('flashcards')" id="nav-flashcards" class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 text-gray-400 hover:text-white hover:bg-gray-800/50">
+                        <i class="fa-solid fa-layer-group text-xs"></i> แฟลชการ์ด (Flashcards)
+                    </button>
+                    <button onclick="switchTab('quiz')" id="nav-quiz" class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 text-gray-400 hover:text-white hover:bg-gray-800/50">
+                        <i class="fa-solid fa-pen-to-square text-xs"></i> ซ้อมทำข้อสอบ (Practice Exam)
+                    </button>
+                </nav>
+
+                <!-- Quick Action Buttons -->
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleCheatsheetModal()" class="px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 hover:bg-amber-500/20 text-xs font-semibold flex items-center gap-1.5 transition-all">
+                        <i class="fa-solid fa-bolt text-amber-400"></i>
+                        <span>สูตรลัด (Cheat Sheet)</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Row -->
+        <div class="md:hidden border-t border-gray-800/80 bg-gray-950/90 px-2 py-2 flex justify-around">
+            <button onclick="switchTab('summary')" id="mobile-nav-summary" class="px-3 py-1.5 rounded-lg text-xs font-medium flex flex-col items-center gap-1 text-brand-500">
+                <i class="fa-solid fa-book-open"></i>
+                <span>สรุปบทเรียน</span>
+            </button>
+            <button onclick="switchTab('flashcards')" id="mobile-nav-flashcards" class="px-3 py-1.5 rounded-lg text-xs font-medium flex flex-col items-center gap-1 text-gray-400">
+                <i class="fa-solid fa-layer-group"></i>
+                <span>แฟลชการ์ด</span>
+            </button>
+            <button onclick="switchTab('quiz')" id="mobile-nav-quiz" class="px-3 py-1.5 rounded-lg text-xs font-medium flex flex-col items-center gap-1 text-gray-400">
+                <i class="fa-solid fa-pen-to-square"></i>
+                <span>ข้อสอบ</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- ========================================== -->
+        <!-- VIEW 1: SUMMARY NOTES (เนื้อหาสรุป) -->
+        <!-- ========================================== -->
+        <section id="tab-summary-view" class="space-y-6">
+            <!-- Search & Filter Banner -->
+            <div class="glass-card rounded-2xl p-6 relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 w-60 h-60 bg-brand-600/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-brand-500/10 text-brand-400 border border-brand-500/20 mb-2">
+                            <i class="fa-solid fa-graduation-cap"></i> INT101 Discrete Mathematics
+                        </span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">คลังเนื้อหาสรุปเตรียมสอบ</h2>
+                        <p class="text-sm text-gray-400 mt-1">รวบรวมมโนทัศน์สำคัญ, ทริคการจำ, จุดโดนหลอกบ่อย พร้อมตัวอย่าง</p>
+                    </div>
+
+                    <!-- Search Input -->
+                    <div class="relative w-full md:w-72">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i>
+                        <input type="text" id="search-notes-input" onkeyup="filterNotes()" placeholder="ค้นหาเนื้อหา, นิยาม, ทริค..."
+                            class="w-full pl-10 pr-4 py-2.5 bg-gray-900/90 border border-gray-700 rounded-xl text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all">
+                    </div>
+                </div>
+
+                <!-- Chapter Filter Buttons -->
+                <div class="flex flex-wrap gap-2 mt-6 pt-4 border-t border-gray-800/80">
+                    <button onclick="filterChapter('all')" class="chapter-btn active px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-600 text-white transition-all">ทั้งหมด (All)</button>
+                    <button onclick="filterChapter('ch1')" class="chapter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-gray-800 text-gray-300 hover:bg-gray-700 transition-all">บทที่ 1: เซต & เพาเวอร์เซต</button>
+                    <button onclick="filterChapter('ch2')" class="chapter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-gray-800 text-gray-300 hover:bg-gray-700 transition-all">บทที่ 2: ฟังก์ชัน & รังนกพิราบ</button>
+                    <button onclick="filterChapter('ch3')" class="chapter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-gray-800 text-gray-300 hover:bg-gray-700 transition-all">บทที่ 3: ความสัมพันธ์ & สมมูล</button>
+                    <button onclick="filterChapter('ch4')" class="chapter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-gray-800 text-gray-300 hover:bg-gray-700 transition-all">บทที่ 4: กฎการนับ & Permutations</button>
+                </div>
+            </div>
+
+            <!-- Chapter Cards Accordion Container -->
+            <div id="notes-container" class="space-y-6">
+
+                <!-- CHAPTER 1 -->
+                <div class="chapter-card glass-card rounded-2xl overflow-hidden border border-gray-800" data-chapter="ch1">
+                    <div class="p-5 sm:p-6 bg-gradient-to-r from-blue-950/40 via-gray-900 to-gray-900 border-b border-gray-800 flex items-center justify-between cursor-pointer" onclick="toggleAccordion('ch1-body')">
+                        <div class="flex items-center gap-3">
+                            <span class="w-9 h-9 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-lg">1</span>
+                            <div>
+                                <h3 class="text-lg font-bold text-white">บทที่ 1: เซตและเซตเพาเวอร์ (Sets, Power Sets & Operations)</h3>
+                                <p class="text-xs text-gray-400">ความรู้พื้นฐาน, เพาเวอร์เซต, การดำเนินการบนเซต & De Morgan, ผลคูณคาร์ทีเซียน</p>
+                            </div>
+                        </div>
+                        <i id="ch1-icon" class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-200"></i>
+                    </div>
+
+                    <div id="ch1-body" class="p-5 sm:p-6 space-y-6">
+                        <!-- 1.1 -->
+                        <div class="space-y-3">
+                            <h4 class="text-md font-semibold text-blue-400 flex items-center gap-2">
+                                <i class="fa-solid fa-bookmark text-xs"></i> 1.1 ความรู้พื้นฐานเกี่ยวกับเซต
+                            </h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-300">
+                                <div class="p-4 rounded-xl bg-gray-900/80 border border-gray-800">
+                                    <span class="font-bold text-white block mb-1">สมาชิก ($\in$) vs สับเซต ($\subseteq$)</span>
+                                    <ul class="list-disc list-inside space-y-1 text-xs text-gray-300">
+                                        <li><strong class="text-blue-300">$a \in A$:</strong> เปิดปีกกาตัวนอกสุดของ $A$ ออก แล้วต้องเห็นตัว $a$ อยู่ข้างในเป๊ะๆ</li>
+                                        <li><strong class="text-blue-300">$A \subseteq B$:</strong> สมาชิกทุกตัวของ $A$ ต้องไปอยู่ใน $B$ (เซตว่าง $\emptyset \subseteq A$ เสมอ)</li>
+                                    </ul>
+                                </div>
+                                <div class="p-4 rounded-xl bg-gray-900/80 border border-gray-800">
+                                    <span class="font-bold text-white block mb-1">จำนวนสมาชิก (Cardinality) $|A|$ หรือ $n(A)$</span>
+                                    <p class="text-xs text-gray-300">นับเฉพาะสมาชิกที่แตกต่างกันเท่านั้น เช่น $A = \{1, 2, 2, 3\} \Rightarrow |A| = 3$</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 1.2 -->
+                        <div class="space-y-3">
+                            <h4 class="text-md font-semibold text-blue-400 flex items-center gap-2">
+                                <i class="fa-solid fa-bookmark text-xs"></i> 1.2 เพาเวอร์เซต (Power Set: $\mathcal{P}(A)$)
+                            </h4>
+                            <div class="p-4 rounded-xl bg-gray-900/80 border border-gray-800 text-sm space-y-2">
+                                <p class="text-gray-300"><strong class="text-white">นิยาม:</strong> เซตของสับเซตทั้งหมดที่เป็นไปได้ของ $A$ | <strong class="text-white">จำนวนสมาชิก:</strong> $|\mathcal{P}(A)| = 2^{|A|}$</p>
+                                <div class="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs space-y-1">
+                                    <span class="font-bold block text-rose-400"><i class="fa-solid fa-triangle-exclamation"></i> จุดโดนหลอกสุดฮิต!</span>
+                                    <p>1. $\emptyset \in \mathcal{P}(A)$ เสมอ และ $\emptyset \subseteq \mathcal{P}(A)$ เสมอ</p>
+                                    <p>2. สมาชิกทุกตัวของ $\mathcal{P}(A)$ <strong>ต้องมีหน้าตาเป็นเซต</strong></p>
+                                    <p>3. $|\mathcal{P}(\emptyset)| = 2^0 = 1$ โดยมีสมาชิกคือ $\{\emptyset\}$</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 1.3 -->
+                        <div class="space-y-3">
+                            <h4 class="text-md font-semibold text-blue-400 flex items-center gap-2">
+                                <i class="fa-solid fa-bookmark text-xs"></i> 1.3 การดำเนินการบนเซต & De Morgan
+                            </h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+                                <div class="p-3 rounded-xl bg-gray-900 border border-gray-800">
+                                    <span class="font-bold text-white text-sm block mb-1">Union ($A \cup B$)</span>
+                                    <p class="text-gray-400">เอาหมดทั้ง $A$ หรือ $B$ ("หรือ")</p>
+                                </div>
+                                <div class="p-3 rounded-xl bg-gray-900 border border-gray-800">
+                                    <span class="font-bold text-white text-sm block mb-1">Intersection ($A \cap B$)</span>
+                                    <p class="text-gray-400">เอาเฉพาะส่วนที่ซ้ำกัน ("และ")</p>
+                                </div>
+                                <div class="p-3 rounded-xl bg-gray-900 border border-gray-800">
+                                    <span class="font-bold text-white text-sm block mb-1">Difference ($A - B$)</span>
+                                    <p class="text-gray-400">อยู่ใน $A$ แต่ไม่อยู่ใน $B$</p>
+                                </div>
+                                <div class="p-3 rounded-xl bg-gray-900 border border-gray-800">
+                                    <span class="font-bold text-white text-sm block mb-1">Complement ($A^c$)</span>
+                                    <p class="text-gray-400">ไม่อยู่ใน $A$ แต่อยู่ใน เอกภพสัมพัทธ์ ($U$)</p>
+                                </div>
+                            </div>
+                            <div class="p-4 rounded-xl bg-gray-900/80 border border-gray-800 text-xs space-y-2">
+                                <p><strong class="text-white">De Morgan's Laws:</strong> $(A \cup B)^c = A^c \cap B^c$  และ  $(A \cap B)^c = A^c \cup B^c$</p>
+                                <p><strong class="text-white">หลักภาพเข้า-ตัดออก (Inclusion-Exclusion):</strong> $|A \cup B| = |A| + |B| - |A \cap B|$</p>
+                            </div>
+                        </div>
+
+                        <!-- Memory Trick Box -->
+                        <div class="p-4 rounded-xl bg-gradient-to-r from-blue-900/30 to-indigo-900/30 border border-blue-500/30 text-xs text-blue-200">
+                            <span class="font-bold text-blue-400 text-sm block mb-1"><i class="fa-solid fa-lightbulb"></i> ทริคการจำ บทที่ 1:</span>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li><strong>"สับเซต $2^n$ ตัว":</strong> สมาชิก $n$ ตัว สร้างสับเซตได้ $2^n$ รูปแบบ</li>
+                                <li><strong>"ตัดปีกกาเช็ก $\in$":</strong> อยากรู้ว่า $x \in A$ ไหม ให้แกะปีกกาชั้นนอกสุดของ $A$ ออก แล้วดูว่ามี $x$ อยู่เป๊ะๆ ไหม</li>
+                                <li><strong>"บวกแยก ลบซ้ำ":</strong> ยูเนียน 2 เซต เอาจำนวนมารวมกัน แล้วลบส่วนที่ทับซ้อน ($A \cap B$) ออก 1 ครั้ง</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHAPTER 2 -->
+                <div class="chapter-card glass-card rounded-2xl overflow-hidden border border-gray-800" data-chapter="ch2">
+                    <div class="p-5 sm:p-6 bg-gradient-to-r from-purple-950/40 via-gray-900 to-gray-900 border-b border-gray-800 flex items-center justify-between cursor-pointer" onclick="toggleAccordion('ch2-body')">
+                        <div class="flex items-center gap-3">
+                            <span class="w-9 h-9 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-lg">2</span>
+                            <div>
+                                <h3 class="text-lg font-bold text-white">บทที่ 2: ฟังก์ชันและหลักการรังนกพิราบ (Functions & Pigeonhole Principle)</h3>
+                                <p class="text-xs text-gray-400">โดเมน-เรนจ์, ประเภทฟังก์ชัน (1-1, Onto, Bijective), Composite & Inverse, Pigeonhole</p>
+                            </div>
+                        </div>
+                        <i id="ch2-icon" class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-200"></i>
+                    </div>
+
+                    <div id="ch2-body" class="p-5 sm:p-6 space-y-6">
+                        <!-- 2.1 & 2.2 Table -->
+                        <div class="space-y-3">
+                            <h4 class="text-md font-semibold text-purple-400 flex items-center gap-2">
+                                <i class="fa-solid fa-bookmark text-xs"></i> 2.1 & 2.2 ประเภทของฟังก์ชัน ($f: A \to B$)
+                            </h4>
+                            <p class="text-xs text-gray-300">ฟังก์ชันคือความสัมพันธ์ที่ <strong>"ตัวหน้า (Input) แต่ละตัว ส่งไปตัวหลัง (Output) ได้เพียงตัวเดียวเท่านั้น"</strong></p>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left text-xs text-gray-300 border-collapse">
+                                    <thead>
+                                        <tr class="bg-gray-800/80 text-white border-b border-gray-700">
+                                            <th class="p-2.5">ประเภท</th>
+                                            <th class="p-2.5">ชื่อเป็นทางการ</th>
+                                            <th class="p-2.5">เงื่อนไข / ทริคการจำ</th>
+                                            <th class="p-2.5">การทดสอบด้วยกราฟ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-800 bg-gray-900/50">
+                                        <tr>
+                                            <td class="p-2.5 font-bold text-purple-300">1-to-1</td>
+                                            <td class="p-2.5 font-semibold">Injective</td>
+                                            <td class="p-2.5">หน้าไม่ซ้ำ & <strong>หลังไม่ซ้ำ</strong> ($f(a)=f(b) \Rightarrow a=b$)</td>
+                                            <td class="p-2.5 text-gray-400">Horizontal Line Test ตัดไม่เกิน 1 จุด</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-2.5 font-bold text-purple-300">Onto</td>
+                                            <td class="p-2.5 font-semibold">Surjective</td>
+                                            <td class="p-2.5"><strong>ใช้หลังหมด</strong> ($\text{Range} = \text{Codomain}$)</td>
+                                            <td class="p-2.5 text-gray-400">กราฟครอบคลุมแกน $y$ ทั้งหมดใน Codomain</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-2.5 font-bold text-purple-300">1-to-1 & Onto</td>
+                                            <td class="p-2.5 font-semibold">Bijective</td>
+                                            <td class="p-2.5">เป็นทั้ง $1-1$ และ ทั่วถึง (จับคู่พอดีเป๊ะ)</td>
+                                            <td class="p-2.5 text-emerald-400 font-semibold">มีฟังก์ชันอินเวอร์ส ($f^{-1}$) ได้</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- 2.3 & 2.4 -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                            <div class="p-4 rounded-xl bg-gray-900/80 border border-gray-800 space-y-2">
+                                <span class="font-bold text-purple-400 text-sm block">Composite & Inverse Functions</span>
+                                <p><strong class="text-white">Composite $(g \circ f)(x):$</strong> $g(f(x))$ ทำจากไส้ใน ($f$) ออกมาข้างนอก ($g$)</p>
+                                <p><strong class="text-white">Inverse ($f^{-1}$):</strong> จะเป็นฟังก์ชันได้ก็ต่อเมื่อ $f$ เป็น <strong>Bijective</strong> เท่านั้น! (สลับ $x \leftrightarrow y$ แล้วจัดรูป $y$ ใหม่)</p>
+                            </div>
+                            <div class="p-4 rounded-xl bg-gray-900/80 border border-gray-800 space-y-2">
+                                <span class="font-bold text-purple-400 text-sm block">หลักการรังนกพิราบ (Pigeonhole Principle)</span>
+                                <p>นำนก $n$ ตัว ใส่ลงในรัง $m$ รัง ถ้า $n > m$ จะต้องมีรังอย่างน้อย 1 รังที่มีนก $\ge 2$ ตัว</p>
+                                <p><strong class="text-white">สูตรทั่วไป:</strong> อย่างน้อย 1 รังมีนกอย่างน้อย $\left\lceil \frac{n}{m} \right\rceil$ ตัว</p>
+                            </div>
+                        </div>
+
+                        <!-- Memory Trick Box -->
+                        <div class="p-4 rounded-xl bg-gradient-to-r from-purple-900/30 to-pink-900/30 border border-purple-500/30 text-xs text-purple-200">
+                            <span class="font-bold text-purple-400 text-sm block mb-1"><i class="fa-solid fa-lightbulb"></i> ทริคการจำ บทที่ 2:</span>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li><strong>"หน้าไม่ซ้ำ = ฟังก์ชัน"</strong> / <strong>"หลังไม่ซ้ำ = 1-to-1"</strong> / <strong>"หลังใช้หมด = Onto"</strong></li>
+                                <li><strong>"Bijective ถึงจะหา Inverse ได้"</strong></li>
+                                <li><strong>"นกมากกว่ารัง $\Rightarrow$ ซ้ำชัวร์!"</strong> (สุ่มคน 13 คน มีอย่างน้อย 2 คนเกิดเดือนเดียวกันแน่นอน)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHAPTER 3 -->
+                <div class="chapter-card glass-card rounded-2xl overflow-hidden border border-gray-800" data-chapter="ch3">
+                    <div class="p-5 sm:p-6 bg-gradient-to-r from-emerald-950/40 via-gray-900 to-gray-900 border-b border-gray-800 flex items-center justify-between cursor-pointer" onclick="toggleAccordion('ch3-body')">
+                        <div class="flex items-center gap-3">
+                            <span class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-lg">3</span>
+                            <div>
+                                <h3 class="text-lg font-bold text-white">บทที่ 3: ความสัมพันธ์และคลาสสมมูล (Relations & Equivalence Relations)</h3>
+                                <p class="text-xs text-gray-400">คุณสมบัติ 3 ประการ (Reflexive, Symmetric, Transitive), Equivalence Class, Partition, Modulo</p>
+                            </div>
+                        </div>
+                        <i id="ch3-icon" class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-200"></i>
+                    </div>
+
+                    <div id="ch3-body" class="p-5 sm:p-6 space-y-6">
+                        <!-- 3.2 Properties -->
+                        <div class="space-y-3">
+                            <h4 class="text-md font-semibold text-emerald-400 flex items-center gap-2">
+                                <i class="fa-solid fa-bookmark text-xs"></i> คุณสมบัติ 3 ประการของความสัมพันธ์ ($R$ บนเซต $A$)
+                            </h4>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                                <div class="p-4 rounded-xl bg-gray-900/80 border border-gray-800 space-y-2">
+                                    <span class="font-bold text-emerald-400 text-sm block">1. Reflexive (สะท้อน)</span>
+                                    <p class="text-gray-300">$\forall a \in A, (a,a) \in R$</p>
+                                    <p class="text-gray-400">ทุกจุดใน Digraph ต้องมี <strong>ห่วงวนเข้าตัวเอง (Loop)</strong> / เส้นทแยงมุมหลักเมทริกซ์เป็น $1$ ทั้งหมด</p>
+                                </div>
+                                <div class="p-4 rounded-xl bg-gray-900/80 border border-gray-800 space-y-2">
+                                    <span class="font-bold text-emerald-400 text-sm block">2. Symmetric (สมมาตร)</span>
+                                    <p class="text-gray-300">ถ้า $(a,b) \in R$ แล้วต้องมี $(b,a) \in R$</p>
+                                    <p class="text-gray-400">เส้นเชื่อมระหว่าง 2 จุด ต้องเป็น <strong>ลูกศรไป-กลับ</strong> เสมอ</p>
+                                </div>
+                                <div class="p-4 rounded-xl bg-gray-900/80 border border-gray-800 space-y-2">
+                                    <span class="font-bold text-emerald-400 text-sm block">3. Transitive (ถ่ายทอด)</span>
+                                    <p class="text-gray-300">ถ้า $(a,b) \in R$ และ $(b,c) \in R$ แล้วต้องมี $(a,c) \in R$</p>
+                                    <p class="text-gray-400">ถ้ามีทางเดิน $a \to b \to c$ ต้องมี <strong>ทางลัดตรง $a \to c$</strong> เสมอ</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3.3 Equivalence & Partition -->
+                        <div class="p-4 rounded-xl bg-gray-900/80 border border-gray-800 text-xs space-y-2">
+                            <span class="font-bold text-white text-sm block">Equivalence Relation & Equivalence Class $[a]$</span>
+                            <p>ถ้า $R$ มีครบทั้ง 3 คุณสมบัติ (Reflexive + Symmetric + Transitive) จะ เรียกว่า <strong>Equivalence Relation</strong></p>
+                            <p><strong class="text-emerald-300">คลาสสมมูล $[a]$:</strong> $[a] = \{x \in A \mid (a, x) \in R\}$ ซึ่งจะแบ่งเซต $A$ ออกเป็นยูนิตย่อยๆ ( Partition / เกาะที่ไม่ทับซ้อนกัน)</p>
+                            <p><strong class="text-emerald-300">ตัวอย่าง Modulo Congruence:</strong> $a \equiv b \pmod 3$ จะแบ่งจำนวนเต็มเป็น 3 คลาสตามเศษเหลือ: $[0], [1], [2]$</p>
+                        </div>
+
+                        <!-- Memory Trick Box -->
+                        <div class="p-4 rounded-xl bg-gradient-to-r from-emerald-900/30 to-teal-900/30 border border-emerald-500/30 text-xs text-emerald-200">
+                            <span class="font-bold text-emerald-400 text-sm block mb-1"><i class="fa-solid fa-lightbulb"></i> ทริคการจำ บทที่ 3:</span>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li><strong>"Reflexive = ห่วงวนทุกจุด"</strong> (ขาดจุดเดียวไม่ได้)</li>
+                                <li><strong>"Symmetric = มีไปต้องมีกลับ"</strong></li>
+                                <li><strong>"Transitive = มีทางอ้อม ต้องมีทางลัด"</strong></li>
+                                <li><strong>"สมมูล = ครบ 3 ข้อ $\Rightarrow$ แบ่งเป็นเกาะไม่ทับซ้อนกัน"</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHAPTER 4 -->
+                <div class="chapter-card glass-card rounded-2xl overflow-hidden border border-gray-800" data-chapter="ch4">
+                    <div class="p-5 sm:p-6 bg-gradient-to-r from-amber-950/40 via-gray-900 to-gray-900 border-b border-gray-800 flex items-center justify-between cursor-pointer" onclick="toggleAccordion('ch4-body')">
+                        <div class="flex items-center gap-3">
+                            <span class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-lg">4</span>
+                            <div>
+                                <h3 class="text-lg font-bold text-white">บทที่ 4: กฎการนับเบื้องต้นและการเรียงสับเปลี่ยน (Basic Counting & Permutations)</h3>
+                                <p class="text-xs text-gray-400">กฎการบวก vs กฎการคูณ, แฟกทอเรียล $0! = 1$, Permutations $P(n,r)$, ของซ้ำกัน</p>
+                            </div>
+                        </div>
+                        <i id="ch4-icon" class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-200"></i>
+                    </div>
+
+                    <div id="ch4-body" class="p-5 sm:p-6 space-y-6">
+                        <!-- Rule of Sum vs Product -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                            <div class="p-4 rounded-xl bg-gray-900/80 border border-gray-800 space-y-2">
+                                <span class="font-bold text-amber-400 text-sm block">Rule of Sum (กฎการบวก / "หรือ - OR")</span>
+                                <p class="text-gray-300">ใช้เมื่อการทำงานแบ่งเป็นกรณีๆ ที่ **จบในตัวเอง ไม่ต่อเนื่องกัน** (Mutually Exclusive)</p>
+                                <p class="font-semibold text-white">จำนวนวิธี = $n_1 + n_2 + \dots + n_k$</p>
+                            </div>
+                            <div class="p-4 rounded-xl bg-gray-900/80 border border-gray-800 space-y-2">
+                                <span class="font-bold text-amber-400 text-sm block">Rule of Product (กฎการคูณ / "และ - AND")</span>
+                                <p class="text-gray-300">ใช้เมื่อการทำงานเป็น **ขั้นตอนต่อเนื่องกัน** งานจะเสร็จต้องทำครบทุกขั้นตอน</p>
+                                <p class="font-semibold text-white">จำนวนวิธี = $n_1 \times n_2 \times \dots \times n_k$</p>
+                            </div>
+                        </div>
+
+                        <!-- Permutations & Duplicate Items -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                            <div class="p-4 rounded-xl bg-gray-900/80 border border-gray-800 space-y-2">
+                                <span class="font-bold text-amber-400 text-sm block">Permutations $P(n,r)$</span>
+                                <p>ใช้เมื่อ **ลำดับมีความสำคัญ (Order Matters)** เช่น ประธาน/รองประธาน, รหัสผ่าน</p>
+                                <p class="font-semibold text-white text-sm">$$P(n,r) = \frac{n!}{(n-r)!}$$</p>
+                            </div>
+                            <div class="p-4 rounded-xl bg-gray-900/80 border border-gray-800 space-y-2">
+                                <span class="font-bold text-amber-400 text-sm block">การเรียงสับเปลี่ยนของที่มีของซ้ำ</span>
+                                <p>มีของ $n$ ชิ้น ซ้ำกลุ่มละ $n_1, n_2, \dots$ ชิ้น</p>
+                                <p class="font-semibold text-white text-sm">$$\text{จำนวนวิธี} = \frac{n!}{n_1! \cdot n_2! \cdots n_k!}$$</p>
+                            </div>
+                        </div>
+
+                        <!-- Proof 0! = 1 -->
+                        <div class="p-3 rounded-xl bg-gray-900 border border-gray-800 text-xs text-gray-300">
+                            <span class="font-bold text-white block mb-1">💡 การพิสูจน์ $0! = 1$:</span>
+                            จาก $n! = n \times (n-1)! \implies$ แทน $n = 1 \implies 1! = 1 \times 0! \implies 1 = 1 \times 0! \implies 0! = 1$
+                        </div>
+
+                        <!-- Memory Trick Box -->
+                        <div class="p-4 rounded-xl bg-gradient-to-r from-amber-900/30 to-orange-900/30 border border-amber-500/30 text-xs text-amber-200">
+                            <span class="font-bold text-amber-400 text-sm block mb-1"><i class="fa-solid fa-lightbulb"></i> ทริคการจำ บทที่ 4:</span>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li><strong>"ทำต่อเนื่อง/หลายขั้นตอน = คูณ"</strong> / <strong>"แยกกรณี/เลือกอย่างใดอย่างหนึ่ง = บวก"</strong></li>
+                                <li><strong>"ตำแหน่งต่างกัน/มีอันดับ = Permutation $P(n,r)$"</strong></li>
+                                <li><strong>"ของซ้ำ = เอา $n!$ ตั้ง แล้วหารด้วยแฟกทอเรียลของจำนวนของซ้ำ"</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- VIEW 2: FLASHCARDS (แฟลชการ์ด) -->
+        <!-- ========================================== -->
+        <section id="tab-flashcards-view" class="hidden space-y-6">
+            <div class="glass-card rounded-2xl p-6 text-center max-w-2xl mx-auto">
+                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-accent-purple/10 text-accent-purple border border-accent-purple/20">
+                    🎴 Flashcard Rapid Recall
+                </span>
+                <h2 class="text-2xl font-bold text-white mt-2">แฟลชการ์ดทบทวนความจำเร่งด่วน</h2>
+                <p class="text-xs text-gray-400 mt-1">คลิกที่การ์ดเพื่อพลิกดูเฉลย/ทริคการจำ</p>
+
+                <!-- Flashcard Counter & Controls -->
+                <div class="flex items-center justify-between mt-6 max-w-md mx-auto text-xs text-gray-400">
+                    <span id="flashcard-counter">การ์ดที่ 1 / 8</span>
+                    <button onclick="resetFlashcards()" class="text-brand-400 hover:underline"><i class="fa-solid fa-rotate-left"></i> เริ่มใหม่</button>
+                </div>
+
+                <!-- 3D Card Container -->
+                <div class="my-6 perspective-1000 w-full max-w-md h-64 mx-auto cursor-pointer" onclick="flipCard()">
+                    <div id="flashcard-inner" class="relative w-full h-full rounded-2xl transform-style-3d shadow-2xl">
+                        
+                        <!-- Front Face -->
+                        <div class="absolute inset-0 w-full h-full rounded-2xl glass-card p-6 flex flex-col justify-between items-center backface-hidden border border-gray-700 bg-gradient-to-br from-gray-900 to-gray-950">
+                            <span id="fc-category" class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-brand-500/20 text-brand-400 border border-brand-500/30">
+                                CATEGORY
+                            </span>
+                            <div class="text-center px-4">
+                                <h3 id="fc-question" class="text-lg font-bold text-white leading-snug">
+                                    Question Front
+                                </h3>
+                            </div>
+                            <p class="text-[11px] text-gray-500"><i class="fa-solid fa-hand-pointer"></i> แตะเพื่อดูเฉลย</p>
+                        </div>
+
+                        <!-- Back Face -->
+                        <div class="absolute inset-0 w-full h-full rounded-2xl glass-card p-6 flex flex-col justify-between items-center backface-hidden rotate-y-180 border border-brand-500/40 bg-gradient-to-br from-gray-900 via-brand-950/40 to-gray-950">
+                            <span class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                                ANSWER & TRICK
+                            </span>
+                            <div class="text-center px-4">
+                                <p id="fc-answer" class="text-sm font-semibold text-gray-200">
+                                    Answer Back
+                                </p>
+                            </div>
+                            <p class="text-[11px] text-brand-400 font-medium"><i class="fa-solid fa-check"></i> แม่นยำแล้ว</p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Navigation Controls -->
+                <div class="flex items-center justify-center gap-4 max-w-md mx-auto">
+                    <button onclick="prevFlashcard()" class="px-4 py-2 rounded-xl bg-gray-800 text-gray-200 hover:bg-gray-700 text-sm font-semibold flex items-center gap-2 transition-all">
+                        <i class="fa-solid fa-arrow-left"></i> ย้อนกลับ
+                    </button>
+                    <button onclick="nextFlashcard()" class="px-6 py-2 rounded-xl bg-brand-600 text-white hover:bg-brand-500 text-sm font-semibold flex items-center gap-2 shadow-lg shadow-brand-500/20 transition-all">
+                        ถัดไป <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- VIEW 3: PRACTICE EXAM (ซ้อมทำข้อสอบ) -->
+        <!-- ========================================== -->
+        <section id="tab-quiz-view" class="hidden space-y-6">
+            <!-- Quiz Header Banner -->
+            <div class="glass-card rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div>
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                        ✏️ INT101 Interactive Practice Exam
+                    </span>
+                    <h2 class="text-2xl font-bold text-white mt-1">ชุดแบบทดสอบซ้อมสอบ 10 ข้อ</h2>
+                    <p class="text-xs text-gray-400">เลือกตอบคำถาม ระบบจะตรวจและแสดงคำอธิบายอย่างละเอียดทันที</p>
+                </div>
+                
+                <!-- Score & Reset Badge -->
+                <div class="flex items-center gap-3">
+                    <div class="text-right">
+                        <span class="text-xs text-gray-400 block">คะแนนของคุณ</span>
+                        <span id="quiz-score-display" class="text-2xl font-extrabold text-emerald-400">0 / 10</span>
+                    </div>
+                    <button onclick="resetQuiz()" class="p-3 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-semibold transition-all" title="ทำข้อสอบใหม่">
+                        <i class="fa-solid fa-rotate-right text-base"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quiz Questions Grid -->
+            <div id="quiz-questions-container" class="space-y-6">
+                <!-- Dynamically Populated by JavaScript -->
+            </div>
+        </section>
+
+    </main>
+
+
+    <!-- ========================================== -->
+    <!-- MODAL: CHEAT SHEET (สูตรลัด) -->
+    <!-- ========================================== -->
+    <div id="cheatsheet-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass-card max-w-3xl w-full max-h-[85vh] rounded-2xl flex flex-col border border-gray-700 shadow-2xl overflow-hidden">
+            <!-- Modal Header -->
+            <div class="p-5 bg-gray-900 border-b border-gray-800 flex items-center justify-between">
+                <div class="flex items-center gap-2 text-amber-400 font-bold text-lg">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>สรุปสูตรลัด Discrete Math (Cheat Sheet)</span>
+                </div>
+                <button onclick="toggleCheatsheetModal()" class="text-gray-400 hover:text-white text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content (Scrollable) -->
+            <div class="p-6 overflow-y-auto space-y-6 text-xs text-gray-300">
+                <!-- Grid 1 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 rounded-xl bg-gray-900/90 border border-gray-800 space-y-1">
+                        <span class="font-bold text-brand-400 block text-sm">จำนวนสมาชิก Power Set</span>
+                        <p class="text-white text-base">$$\mathcal{|P}(A)| = 2^{|A|}$$</p>
+                        <p class="text-gray-400">สับเซตว่าง $\emptyset \in \mathcal{P}(A)$ และ $\emptyset \subseteq \mathcal{P}(A)$ เสมอ</p>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-gray-900/90 border border-gray-800 space-y-1">
+                        <span class="font-bold text-brand-400 block text-sm">Inclusion-Exclusion Principle</span>
+                        <p class="text-white text-base">$$|A \cup B| = |A| + |B| - |A \cap B|$$</p>
+                    </div>
+                </div>
+
+                <!-- Grid 2 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 rounded-xl bg-gray-900/90 border border-gray-800 space-y-1">
+                        <span class="font-bold text-purple-400 block text-sm">Generalized Pigeonhole</span>
+                        <p class="text-white text-base">$$\text{อย่างน้อย 1 รังมีนก } \ge \left\lceil \frac{n}{m} \right\rceil$$</p>
+                        <p class="text-gray-400">$n$ = นก, $m$ = รัง</p>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-gray-900/90 border border-gray-800 space-y-1">
+                        <span class="font-bold text-amber-400 block text-sm">Permutations (ไม่มีของซ้ำ)</span>
+                        <p class="text-white text-base">$$P(n,r) = \frac{n!}{(n-r)!}$$</p>
+                    </div>
+                </div>
+
+                <!-- Summary Checklist -->
+                <div class="p-4 rounded-xl bg-gray-900/90 border border-gray-800 space-y-2">
+                    <span class="font-bold text-emerald-400 block text-sm">Checklist คุณสมบัติความสัมพันธ์ (Relations)</span>
+                    <ul class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                        <li class="p-2 rounded bg-gray-950 border border-gray-800">
+                            <strong class="text-white block">Reflexive:</strong> $(a,a) \in R$ ทุกตัวใน $A$
+                        </li>
+                        <li class="p-2 rounded bg-gray-950 border border-gray-800">
+                            <strong class="text-white block">Symmetric:</strong> $(a,b) \in R \implies (b,a) \in R$
+                        </li>
+                        <li class="p-2 rounded bg-gray-950 border border-gray-800">
+                            <strong class="text-white block">Transitive:</strong> $(a,b), (b,c) \implies (a,c)$
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-4 bg-gray-900 border-t border-gray-800 text-right">
+                <button onclick="toggleCheatsheetModal()" class="px-5 py-2 rounded-xl bg-gray-800 text-white font-semibold text-xs hover:bg-gray-700">
+                    ปิดหน้าต่าง
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Application JavaScript Logic -->
+    <script>
+        // State variables
+        let currentTab = 'summary';
+        let currentFlashcardIndex = 0;
+        let isCardFlipped = false;
+        let userAnswers = {};
+
+        // Flashcards Data
+        const flashcardsData = [
+            {
+                category: "บทที่ 1: เซต",
+                question: "จำนวนสมาชิกของ Power Set $\mathcal{P}(A)$ คำนวณอย่างไร?",
+                answer: "|\mathcal{P}(A)| = 2^{|A|} โดยที่สมาชิกทุกตัวของ Power Set ต้องมีหน้าตาเป็นเซต และมี $\emptyset \in \mathcal{P}(A)$ เสมอ"
+            },
+            {
+                category: "บทที่ 1: เซต",
+                question: "กฎของเดอมอร์แกน (De Morgan's Laws) มีสูตรว่าอย่างไร?",
+                answer: "$(A \cup B)^c = A^c \cap B^c$ และ $(A \cap B)^c = A^c \cup B^c$ (แจก Complement เปลี่ยน ยูเนียนเป็น อินเตอร์เซกชัน)"
+            },
+            {
+                category: "บทที่ 2: ฟังก์ชัน",
+                question: "เงื่อนไขสำคัญที่ทำให้ฟังก์ชัน $f$ มีฟังก์ชันอินเวอร์ส ($f^{-1}$) คืออะไร?",
+                answer: "ฟังก์ชัน $f$ ต้องเป็น **Bijective** (เป็นทั้ง 1-to-1 และ Onto) เท่านั้น!"
+            },
+            {
+                category: "บทที่ 2: รังนกพิราบ",
+                question: "สูตร Generalized Pigeonhole Principle มีว่าอย่างไร?",
+                answer: "ถ้านำนก $n$ ตัว ใส่ลงในรัง $m$ รัง จะมีอย่างน้อย 1 รังที่มีนกอย่างน้อย $\\left\\lceil \\frac{n}{m} \\right\\rceil$ ตัว"
+            },
+            {
+                category: "บทที่ 3: ความสัมพันธ์",
+                question: "ความสัมพันธ์สมมูล (Equivalence Relation) ต้องมีคุณสมบัติอะไรบ้าง?",
+                answer: "ต้องครบทั้ง 3 คุณสมบัติ ได้แก่: 1) Reflexive (สะท้อน) 2) Symmetric (สมมาตร) 3) Transitive (ถ่ายทอด)"
+            },
+            {
+                category: "บทที่ 3: ความสัมพันธ์",
+                question: "ทริคการดู Reflexive ใน Digraph และ Matrix คืออะไร?",
+                answer: "Digraph: ทุกจุดต้องมีห่วงวนเข้าตัวเอง (Loop) | Matrix: บนเส้นทแยงมุมหลักต้องมีเลข 1 ทุกตัว"
+            },
+            {
+                category: "บทที่ 4: กฎการนับ",
+                question: "เมื่อไหร่จึงจะใช้ 'กฎการคูณ' และเมื่อไหร่ใช้ 'กฎการบวก'?",
+                answer: "กฎการคูณ: งานทำต่อเนื่องกันหลายขั้นตอน | กฎการบวก: งานแยกเป็นกรณีๆ ที่จบในตัวเอง (OR)"
+            },
+            {
+                category: "บทที่ 4: Permutations",
+                question: "เรียงสับเปลี่ยนของ $n$ ชิ้นที่มีของซ้ำกันกลุ่มละ $n_1, n_2$ ชิ้น มีสูตรว่าอย่างไร?",
+                answer: "\\text{จำนวนวิธี} = \\frac{n!}{n_1! \\cdot n_2! \\dots n_k!}"
+            }
+        ];
+
+        // Quiz Questions Data
+        const quizQuestions = [
+            {
+                id: 1,
+                chapter: "บทที่ 1: เซต",
+                question: "กำหนดให้ $A = \\{1, \\{2, 3\\}, \\emptyset\\}$ ข้อความในข้อใดต่อไปนี้ **ไม่ถูกต้อง**?",
+                options: [
+                    "A) $\\emptyset \\in A$",
+                    "B) $\\{1\\} \\subseteq A$",
+                    "C) $\\{2, 3\\} \\subseteq A$",
+                    "D) $|\\mathcal{P}(A)| = 8$"
+                ],
+                correct: 2, // Index 2 -> C
+                explanation: "<b>เฉลย C) $\\{2, 3\\} \\subseteq A$</b><br>สมาชิกของ $A$ มี 3 ตัว คือ $1$, $\\{2, 3\\}$, และ $\\emptyset$<br>ดังนั้น $\\{2, 3\\}$ เป็น <b>สมาชิก ($\\in$)</b> ของ $A$ ไม่ใช่สับเซต! หากต้องการให้เป็นสับเซต ต้องเขียนว่า $\\{\\{2, 3\\}\\} \\subseteq A$"
+            },
+            {
+                id: 2,
+                chapter: "บทที่ 1: เซต",
+                question: "ในการสำรวจพบสินค้าลดราคา $820$ ชิ้น, ส่งฟรี $527$ ชิ้น และเป็นทั้งลดราคาและส่งฟรี $227$ ชิ้น มีสินค้าทั้งหมดกี่ชิ้นที่เป็นลดราคาหรือส่งฟรี?",
+                options: [
+                    "A) 1,347 ชิ้น",
+                    "B) 1,120 ชิ้น",
+                    "C) 1,574 ชิ้น",
+                    "D) 593 ชิ้น"
+                ],
+                correct: 1, // Index 1 -> B
+                explanation: "<b>เฉลย B) 1,120 ชิ้น</b><br>ใช้หลักภาพเข้า-ตัดออก: $|A \\cup B| = |A| + |B| - |A \\cap B|<br>|A \\cup B| = 820 + 527 - 227 = 1,120$ ชิ้น"
+            },
+            {
+                id: 3,
+                chapter: "บทที่ 2: ฟังก์ชัน",
+                question: "กำหนดให้ $f(x) = x - 2$ และ $g(x) = 3x^2$ ค่าของ $(g \\circ f)(5)$ เท่ากับเท่าใด?",
+                options: [
+                    "A) 25",
+                    "B) 27",
+                    "C) 73",
+                    "D) 75"
+                ],
+                correct: 1, // Index 1 -> B
+                explanation: "<b>เฉลย B) 27</b><br>1) หาไส้ใน $f(5) = 5 - 2 = 3$<br>2) นำผลลัพธ์ใส่ใน $g(x) \\Rightarrow g(3) = 3(3)^2 = 3 \\times 9 = 27$"
+            },
+            {
+                id: 4,
+                chapter: "บทที่ 2: ฟังก์ชัน",
+                question: "กำหนดฟังก์ชัน $f(x) = 5x - 3$ ฟังก์ชันผกผัน $f^{-1}(x)$ คือข้อใด?",
+                options: [
+                    "A) $f^{-1}(x) = \\frac{x+3}{5}$",
+                    "B) $f^{-1}(x) = \\frac{x-3}{5}$",
+                    "C) $f^{-1}(x) = 3x - 5$",
+                    "D) $f^{-1}(x) = \\frac{1}{5x-3}$"
+                ],
+                correct: 0, // Index 0 -> A
+                explanation: "<b>เฉลย A) $f^{-1}(x) = \\frac{x+3}{5}$</b><br>1) ให้ $y = 5x - 3$<br>2) สลับ $x \\leftrightarrow y \\Rightarrow x = 5y - 3$<br>3) จัดรูปหา $y \\implies x + 3 = 5y \\implies y = \\frac{x+3}{5}$"
+            },
+            {
+                id: 5,
+                chapter: "บทที่ 2: รังนกพิราบ",
+                question: "ต้องสุ่มเลือกนักศึกษาอย่างน้อยกี่คน จึงจะรับประกันได้ว่าจะมีอย่างน้อย $2$ คน เกิดในเดือนเดียวกันแน่นอน?",
+                options: [
+                    "A) 12 คน",
+                    "B) 13 คน",
+                    "C) 24 คน",
+                    "D) 365 คน"
+                ],
+                correct: 1, // Index 1 -> B
+                explanation: "<b>เฉลย B) 13 คน</b><br>เดือนในหนึ่งปีมี $m = 12$ เดือน (รัง 12 รัง) หากสุ่มคน $n = 13$ คน ($13 > 12$) จะการันตีทันทีว่ามีอย่างน้อย 1 เดือนที่มีคนเกิดซ้ำกันอย่างน้อย 2 คน"
+            },
+            {
+                id: 6,
+                chapter: "บทที่ 3: ความสัมพันธ์",
+                question: "กำหนด $A = \\{1, 2, 3\\}$ และ $R = \\{(1,1), (2,2), (3,3), (1,2), (2,1)\\}$ ความสัมพันธ์ $R$ มีคุณสมบัติตามข้อใด?",
+                options: [
+                    "A) Reflexive และ Symmetric แต่ไม่เป็น Transitive",
+                    "B) Reflexive, Symmetric และ Transitive (Equivalence Relation)",
+                    "C) Symmetric และ Transitive แต่ไม่เป็น Reflexive",
+                    "D) Reflexive แต่ไม่เป็น Symmetric"
+                ],
+                correct: 1, // Index 1 -> B
+                explanation: "<b>เฉลย B) Equivalence Relation</b><br>• Reflexive: มี $(1,1), (2,2), (3,3)$ ครบ<br>• Symmetric: มี $(1,2)$ และ $(2,1)$ คู่ขนานกลับ<br>• Transitive: พิจารณา $(1,2)$ และ $(2,1)$ จะต้องมี $(1,1)$ ซึ่งก็มีอยู่แล้ว<br>จึงครบทั้ง 3 คุณสมบัติ"
+            },
+            {
+                id: 7,
+                chapter: "บทที่ 3: คลาสสมมูล",
+                question: "ความสัมพันธ์ $a R b \\iff a \\equiv b \\pmod 3$ คลาสสมมูล $[1]$ ประกอบด้วยสมาชิกกลุ่มใด?",
+                options: [
+                    "A) $\\{\\dots, -6, -3, 0, 3, 6, \\dots\\}$",
+                    "B) $\\{\\dots, -5, -2, 1, 4, 7, \\dots\\}$",
+                    "C) $\\{\\dots, -4, -1, 2, 5, 8, \\dots\\}$",
+                    "D) $\\{1, 3, 9, 27\\}$"
+                ],
+                correct: 1, // Index 1 -> B
+                explanation: "<b>เฉลย B) $\\{\\dots, -5, -2, 1, 4, 7, \\dots\\}$</b><br>คลาสสมมูล $[1]$ คือเซตของจำนวนเต็มทั้งหมดที่หารด้วย $3$ แล้วเหลือเศษ $1$ เท่ากัน เช่น $1, 4, 7, -2, -5$"
+            },
+            {
+                id: 8,
+                chapter: "บทที่ 4: กฎการนับ",
+                question: "สร้าง PIN 4 หลัก โดย 2 หลักแรกเป็นอักษรใหญ่ (A-Z) และ 2 หลักหลังเป็นตัวเลข (0-9) แบบซ้ำกันได้ จะสร้างได้กี่รูปแบบ?",
+                options: [
+                    "A) $26 + 26 + 10 + 10 = 72$",
+                    "B) $26 \\times 25 \\times 10 \\times 9 = 58,500$",
+                    "C) $26^2 \\times 10^2 = 67,600$",
+                    "D) $26^4 = 456,976$"
+                ],
+                correct: 2, // Index 2 -> C
+                explanation: "<b>เฉลย C) $26^2 \\times 10^2 = 67,600$</b><br>ใช้กฎการคูณต่อเนื่อง 4 ขั้นตอน: $26 \\times 26 \\times 10 \\times 10 = 26^2 \\times 10^2 = 67,600$ รูปแบบ"
+            },
+            {
+                id: 9,
+                chapter: "บทที่ 4: Permutation",
+                question: "จัดเรียงตัวอักษรจากคำว่า 'CODES' ให้เป็นคำใหม่ได้กี่วิธี โดยมีเงื่อนไขว่า **ต้องขึ้นต้นด้วยตัวอักษร 'C' เสมอ**?",
+                options: [
+                    "A) 120 วิธี",
+                    "B) 24 วิธี",
+                    "C) 6 วิธี",
+                    "D) 12 วิธี"
+                ],
+                correct: 1, // Index 1 -> B
+                explanation: "<b>เฉลย B) 24 วิธี</b><br>ตำแหน่งแรกคือ 'C' (1 วิธี) เหลือตำแหน่งที่ต้องสลับอักษรอีก 4 ตำแหน่ง (O, D, E, S) ซึ่งไม่ซ้ำกัน สลับได้ $4! = 4 \\times 3 \\times 2 \\times 1 = 24$ วิธี"
+            },
+            {
+                id: 10,
+                chapter: "บทที่ 4: Permutation",
+                question: "สมาชิก 10 คน เลือกกรรมการ 3 คนเพื่อดำรงตำแหน่ง ประธาน, รองประธาน และเหรัญญิก มีวิธีเลือกกี่วิธี?",
+                options: [
+                    "A) 720 วิธี",
+                    "B) 120 วิธี",
+                    "C) 30 วิธี",
+                    "D) 1000 วิธี"
+                ],
+                correct: 0, // Index 0 -> A
+                explanation: "<b>เฉลย A) 720 วิธี</b><br>ตำแหน่งแตกต่างกัน (ลำดับสำคัญ) ใช้ Permutation $P(10,3) = \\frac{10!}{(10-3)!} = 10 \\times 9 \\times 8 = 720$ วิธี"
+            }
+        ];
+
+        // DOM Loaded Event
+        window.onload = function() {
+            renderFlashcard();
+            renderQuiz();
+            renderMath();
+        };
+
+        // Render KaTeX Math
+        function renderMath() {
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+
+        // Tab Switching Logic
+        function switchTab(tabName) {
+            currentTab = tabName;
+            
+            // Hide all tab views
+            document.getElementById('tab-summary-view').classList.add('hidden');
+            document.getElementById('tab-flashcards-view').classList.add('hidden');
+            document.getElementById('tab-quiz-view').classList.add('hidden');
+
+            // Show target view
+            document.getElementById(`tab-${tabName}-view`).classList.remove('hidden');
+
+            // Reset navigation highlight styles
+            ['summary', 'flashcards', 'quiz'].forEach(t => {
+                const btn = document.getElementById(`nav-${t}`);
+                const mBtn = document.getElementById(`mobile-nav-${t}`);
+                if (t === tabName) {
+                    btn.className = "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 text-brand-500 bg-gray-800 shadow-sm";
+                    if (mBtn) mBtn.className = "px-3 py-1.5 rounded-lg text-xs font-medium flex flex-col items-center gap-1 text-brand-500";
+                } else {
+                    btn.className = "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 text-gray-400 hover:text-white hover:bg-gray-800/50";
+                    if (mBtn) mBtn.className = "px-3 py-1.5 rounded-lg text-xs font-medium flex flex-col items-center gap-1 text-gray-400";
+                }
+            });
+
+            renderMath();
+        }
+
+        // Accordion Toggle for Summary Notes
+        function toggleAccordion(bodyId) {
+            const body = document.getElementById(bodyId);
+            const icon = document.getElementById(`${bodyId.split('-')[0]}-icon`);
+            if (body.classList.contains('hidden')) {
+                body.classList.remove('hidden');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                body.classList.add('hidden');
+                icon.style.transform = 'rotate(-90deg)';
+            }
+        }
+
+        // Filter Notes by Chapter
+        function filterChapter(chapterCode) {
+            const cards = document.querySelectorAll('.chapter-card');
+            const btns = document.querySelectorAll('.chapter-btn');
+
+            btns.forEach(btn => {
+                btn.classList.remove('bg-brand-600', 'text-white');
+                btn.classList.add('bg-gray-800', 'text-gray-300');
+            });
+
+            event.target.classList.remove('bg-gray-800', 'text-gray-300');
+            event.target.classList.add('bg-brand-600', 'text-white');
+
+            cards.forEach(card => {
+                if (chapterCode === 'all' || card.dataset.chapter === chapterCode) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+
+        // Real-time Notes Search
+        function filterNotes() {
+            const query = document.getElementById('search-notes-input').value.toLowerCase();
+            const cards = document.querySelectorAll('.chapter-card');
+
+            cards.forEach(card => {
+                const text = card.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+
+        // Flashcard Functions
+        function renderFlashcard() {
+            const card = flashcardsData[currentFlashcardIndex];
+            document.getElementById('flashcard-counter').innerText = `การ์ดที่ ${currentFlashcardIndex + 1} / ${flashcardsData.length}`;
+            document.getElementById('fc-category').innerText = card.category;
+            document.getElementById('fc-question').innerHTML = card.question;
+            document.getElementById('fc-answer').innerHTML = card.answer;
+
+            // Reset flip state
+            isCardFlipped = false;
+            document.getElementById('flashcard-inner').classList.remove('rotate-y-180');
+
+            setTimeout(() => renderMath(), 50);
+        }
+
+        function flipCard() {
+            isCardFlipped = !isCardFlipped;
+            const cardInner = document.getElementById('flashcard-inner');
+            if (isCardFlipped) {
+                cardInner.classList.add('rotate-y-180');
+            } else {
+                cardInner.classList.remove('rotate-y-180');
+            }
+        }
+
+        function nextFlashcard() {
+            currentFlashcardIndex = (currentFlashcardIndex + 1) % flashcardsData.length;
+            renderFlashcard();
+        }
+
+        function prevFlashcard() {
+            currentFlashcardIndex = (currentFlashcardIndex - 1 + flashcardsData.length) % flashcardsData.length;
+            renderFlashcard();
+        }
+
+        function resetFlashcards() {
+            currentFlashcardIndex = 0;
+            renderFlashcard();
+        }
+
+        // Quiz Rendering & Selection Logic
+        function renderQuiz() {
+            const container = document.getElementById('quiz-questions-container');
+            container.innerHTML = '';
+
+            quizQuestions.forEach((q, qIndex) => {
+                const qCard = document.createElement('div');
+                qCard.className = 'glass-card rounded-2xl p-6 border border-gray-800 space-y-4';
+                
+                let optionsHTML = '';
+                q.options.forEach((opt, optIndex) => {
+                    const isSelected = userAnswers[q.id] === optIndex;
+                    let btnClass = 'w-full text-left p-3.5 rounded-xl text-xs sm:text-sm border transition-all duration-200 flex items-center justify-between ';
+                    
+                    if (userAnswers[q.id] !== undefined) {
+                        if (optIndex === q.correct) {
+                            btnClass += 'bg-emerald-500/20 border-emerald-500 text-emerald-300 font-semibold';
+                        } else if (isSelected && optIndex !== q.correct) {
+                            btnClass += 'bg-rose-500/20 border-rose-500 text-rose-300 font-semibold';
+                        } else {
+                            btnClass += 'bg-gray-900/50 border-gray-800 text-gray-500 opacity-60';
+                        }
+                    } else {
+                        btnClass += 'bg-gray-900/80 border-gray-800 hover:border-brand-500/50 hover:bg-gray-800 text-gray-200';
+                    }
+
+                    optionsHTML += `
+                        <button onclick="selectOption(${q.id}, ${optIndex})" class="${btnClass}">
+                            <span>${opt}</span>
+                            ${userAnswers[q.id] !== undefined ? (optIndex === q.correct ? '<i class="fa-solid fa-circle-check text-emerald-400"></i>' : (isSelected ? '<i class="fa-solid fa-circle-xmark text-rose-400"></i>' : '')) : ''}
+                        </button>
+                    `;
+                });
+
+                let explanationHTML = '';
+                if (userAnswers[q.id] !== undefined) {
+                    explanationHTML = `
+                        <div class="mt-4 p-4 rounded-xl bg-gray-900/90 border border-gray-800 text-xs text-gray-300 space-y-1">
+                            <span class="font-bold text-brand-400 block"><i class="fa-solid fa-circle-info"></i> คำอธิบายอย่างละเอียด:</span>
+                            <p class="leading-relaxed">${q.explanation}</p>
+                        </div>
+                    `;
+                }
+
+                qCard.innerHTML = `
+                    <div class="flex items-center justify-between border-b border-gray-800/80 pb-3">
+                        <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-brand-500/10 text-brand-400 border border-brand-500/20">
+                            ${q.chapter}
+                        </span>
+                        <span class="text-xs text-gray-400 font-mono">ข้อที่ ${qIndex + 1} / ${quizQuestions.length}</span>
+                    </div>
+                    <h3 class="text-sm sm:text-base font-bold text-white leading-snug">${q.question}</h3>
+                    <div class="space-y-2.5 pt-1">
+                        ${optionsHTML}
+                    </div>
+                    ${explanationHTML}
+                `;
+
+                container.appendChild(qCard);
+            });
+
+            updateScore();
+            setTimeout(() => renderMath(), 50);
+        }
+
+        function selectOption(qId, optIndex) {
+            userAnswers[qId] = optIndex;
+            renderQuiz();
+        }
+
+        function updateScore() {
+            let score = 0;
+            quizQuestions.forEach(q => {
+                if (userAnswers[q.id] === q.correct) {
+                    score++;
+                }
+            });
+            document.getElementById('quiz-score-display').innerText = `${score} / ${quizQuestions.length}`;
+        }
+
+        function resetQuiz() {
+            userAnswers = {};
+            renderQuiz();
+        }
+
+        // Modal Controls
+        function toggleCheatsheetModal() {
+            const modal = document.getElementById('cheatsheet-modal');
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                setTimeout(() => renderMath(), 50);
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
