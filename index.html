@@ -190,6 +190,7 @@
                     <button onclick="filterChapter('ch2')" class="chapter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-gray-800 text-gray-300 hover:bg-gray-700 transition-all">บทที่ 2: ฟังก์ชัน & รังนกพิราบ</button>
                     <button onclick="filterChapter('ch3')" class="chapter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-gray-800 text-gray-300 hover:bg-gray-700 transition-all">บทที่ 3: ความสัมพันธ์ & สมมูล</button>
                     <button onclick="filterChapter('ch4')" class="chapter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-gray-800 text-gray-300 hover:bg-gray-700 transition-all">บทที่ 4: กฎการนับ & Permutations</button>
+                    <button onclick="filterChapter('ch5')" class="chapter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-gray-800 text-gray-300 hover:bg-gray-700 transition-all">บทที่ 5: เทคนิคการพิสูจน์ & Induction</button>
                 </div>
             </div>
 
@@ -486,69 +487,97 @@
                     </div>
                 </div>
 
-            </div>
-        </section>
-
-
-        <!-- ========================================== -->
-        <!-- VIEW 2: FLASHCARDS (แฟลชการ์ด) -->
-        <!-- ========================================== -->
-        <section id="tab-flashcards-view" class="hidden space-y-6">
-            <div class="glass-card rounded-2xl p-6 text-center max-w-2xl mx-auto">
-                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-accent-purple/10 text-accent-purple border border-accent-purple/20">
-                    🎴 Flashcard Rapid Recall
-                </span>
-                <h2 class="text-2xl font-bold text-white mt-2">แฟลชการ์ดทบทวนความจำเร่งด่วน</h2>
-                <p class="text-xs text-gray-400 mt-1">คลิกที่การ์ดเพื่อพลิกดูเฉลย/ทริคการจำ</p>
-
-                <!-- Flashcard Counter & Controls -->
-                <div class="flex items-center justify-between mt-6 max-w-md mx-auto text-xs text-gray-400">
-                    <span id="flashcard-counter">การ์ดที่ 1 / 8</span>
-                    <button onclick="resetFlashcards()" class="text-brand-400 hover:underline"><i class="fa-solid fa-rotate-left"></i> เริ่มใหม่</button>
-                </div>
-
-                <!-- 3D Card Container -->
-                <div class="my-6 perspective-1000 w-full max-w-md h-64 mx-auto cursor-pointer" onclick="flipCard()">
-                    <div id="flashcard-inner" class="relative w-full h-full rounded-2xl transform-style-3d shadow-2xl">
-                        
-                        <!-- Front Face -->
-                        <div class="absolute inset-0 w-full h-full rounded-2xl glass-card p-6 flex flex-col justify-between items-center backface-hidden border border-gray-700 bg-gradient-to-br from-gray-900 to-gray-950">
-                            <span id="fc-category" class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-brand-500/20 text-brand-400 border border-brand-500/30">
-                                CATEGORY
-                            </span>
-                            <div class="text-center px-4">
-                                <h3 id="fc-question" class="text-lg font-bold text-white leading-snug">
-                                    Question Front
-                                </h3>
+                <!-- CHAPTER 5: PROOFS & INDUCTION -->
+                <div class="chapter-card glass-card rounded-2xl overflow-hidden border border-gray-800" data-chapter="ch5">
+                    <div class="p-5 sm:p-6 bg-gradient-to-r from-rose-950/40 via-gray-900 to-gray-900 border-b border-gray-800 flex items-center justify-between cursor-pointer" onclick="toggleAccordion('ch5-body')">
+                        <div class="flex items-center gap-3">
+                            <span class="w-9 h-9 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center font-bold text-lg">5</span>
+                            <div>
+                                <h3 class="text-lg font-bold text-white">บทที่ 5: เทคนิคการพิสูจน์และอุปนัยเชิงคณิตศาสตร์ (Proof Methods & Induction)</h3>
+                                <p class="text-xs text-gray-400">Direct, Contraposition, Contradiction, Counterexample, Mathematical Induction</p>
                             </div>
-                            <p class="text-[11px] text-gray-500"><i class="fa-solid fa-hand-pointer"></i> แตะเพื่อดูเฉลย</p>
+                        </div>
+                        <i id="ch5-icon" class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-200"></i>
+                    </div>
+
+                    <div id="ch5-body" class="p-5 sm:p-6 space-y-6">
+                        <!-- 5.1 Methods of Proof Table -->
+                        <div class="space-y-3">
+                            <h4 class="text-md font-semibold text-rose-400 flex items-center gap-2">
+                                <i class="fa-solid fa-bookmark text-xs"></i> 5.1 รูปแบบการพิสูจน์ประพจน์เงื่อนไข ($p \implies q$)
+                            </h4>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left text-xs text-gray-300 border-collapse">
+                                    <thead>
+                                        <tr class="bg-gray-800/80 text-white border-b border-gray-700">
+                                            <th class="p-2.5">วิธีการพิสูจน์</th>
+                                            <th class="p-2.5">สิ่งที่สมมติ (Hypothesis)</th>
+                                            <th class="p-2.5">สิ่งที่ต้องพิสูจน์ให้ได้ (Goal)</th>
+                                            <th class="p-2.5">หลักการ / สมมูลตรรกศาสตร์</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-800 bg-gray-900/50">
+                                        <tr>
+                                            <td class="p-2.5 font-bold text-rose-300">1. Direct Proof (โดยตรง)</td>
+                                            <td class="p-2.5">สมมติ $p$ เป็นจริง</td>
+                                            <td class="p-2.5">แสดงให้ได้ว่า $q$ เป็นจริง</td>
+                                            <td class="p-2.5 text-gray-400">ตรงไปตรงมาด้วยนิยาม/พีชคณิต</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-2.5 font-bold text-rose-300">2. Contraposition (แย้งสลับที่)</td>
+                                            <td class="p-2.5">สมมติ $\neg q$ เป็นจริง (ผลเป็นเท็จ)</td>
+                                            <td class="p-2.5">แสดงให้ได้ว่า $\neg p$ เป็นจริง (เหตุเป็นเท็จ)</td>
+                                            <td class="p-2.5 text-emerald-400 font-mono">$p \implies q \equiv \neg q \implies \neg p$</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-2.5 font-bold text-rose-300">3. Contradiction (ข้อขัดแย้ง)</td>
+                                            <td class="p-2.5">สมมติให้สิ่งที่พิสูจน์เป็นเท็จ ($p \land \neg q$)</td>
+                                            <td class="p-2.5">หาข้อขัดแย้งกับข้อเท็จจริงเดิม ($r \land \neg r$)</td>
+                                            <td class="p-2.5 text-gray-400">เช่น พิสูจน์ว่า $\sqrt{2}$ เป็นอตรรกยะ</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-2.5 font-bold text-rose-300">4. Counterexample (ตัวอย่างค้าน)</td>
+                                            <td class="p-2.5">ใช้หักล้างประพจน์ $\forall x P(x)$</td>
+                                            <td class="p-2.5">ยกตัวอย่าง $x$ แค่ **1 ตัว** ที่ทำให้ $P(x)$ เป็นเท็จ</td>
+                                            <td class="p-2.5 text-amber-400 font-semibold">เจอตัวเดียวล้มทั้งทฤษฎีได้เลย!</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
 
-                        <!-- Back Face -->
-                        <div class="absolute inset-0 w-full h-full rounded-2xl glass-card p-6 flex flex-col justify-between items-center backface-hidden rotate-y-180 border border-brand-500/40 bg-gradient-to-br from-gray-900 via-brand-950/40 to-gray-950">
-                            <span class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                                ANSWER & TRICK
-                            </span>
-                            <div class="text-center px-4">
-                                <p id="fc-answer" class="text-sm font-semibold text-gray-200">
-                                    Answer Back
-                                </p>
+                        <!-- 5.2 Mathematical Induction -->
+                        <div class="space-y-3">
+                            <h4 class="text-md font-semibold text-rose-400 flex items-center gap-2">
+                                <i class="fa-solid fa-bookmark text-xs"></i> 5.2 หลักการอุปนัยเชิงคณิตศาสตร์ (Mathematical Induction)
+                            </h4>
+                            <p class="text-xs text-gray-300">ใช้พิสูจน์ประพจน์ $P(n)$ ที่อ้างอิงกับจำนวนเต็มบวกทุกตัว $n \ge 1$ (เปรียบเหมือนโดมิโนล้ม)</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                                <div class="p-4 rounded-xl bg-gray-900/80 border border-gray-800 space-y-2">
+                                    <span class="font-bold text-rose-400 text-sm block">Step 1: Base Step (ขั้นพื้นฐาน)</span>
+                                    <p class="text-gray-300">ต้องพิสูจน์ให้ได้ว่า **$P(1)$ เป็นจริง** (ดันโดมิโนตัวแรกให้ล้ม)</p>
+                                    <p class="text-gray-400">แทนค่า $n = 1$ ฝั่งซ้ายและฝั่งขวาของสมการแล้วดูว่าเท่ากันหรือไม่</p>
+                                </div>
+                                <div class="p-4 rounded-xl bg-gray-900/80 border border-gray-800 space-y-2">
+                                    <span class="font-bold text-rose-400 text-sm block">Step 2: Inductive Step (ขั้นอุปนัย)</span>
+                                    <p class="text-gray-300">1. **Inductive Hypothesis:** สมมติให้ $P(k)$ เป็นจริง สำหรับ $k \ge 1$</p>
+                                    <p class="text-gray-300">2. **Goal:** พิสูจน์ให้ได้ว่า **$P(k+1)$ เป็นจริงด้วย** โดยต้องดึงสมมติฐาน $P(k)$ มาช่วยจัดรูป!</p>
+                                </div>
                             </div>
-                            <p class="text-[11px] text-brand-400 font-medium"><i class="fa-solid fa-check"></i> แม่นยำแล้ว</p>
                         </div>
 
+                        <!-- Memory Trick Box -->
+                        <div class="p-4 rounded-xl bg-gradient-to-r from-rose-900/30 to-pink-900/30 border border-rose-500/30 text-xs text-rose-200">
+                            <span class="font-bold text-rose-400 text-sm block mb-1"><i class="fa-solid fa-lightbulb"></i> ทริคการจำ บทที่ 5:</span>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li><strong>"พิสูจน์โดยตรงไม่ติด $\Rightarrow$ ลองแย้งสลับที่ ($\neg q \implies \neg p$)"</strong> (เช่น พิสูจน์กำลังสองคี่ ให้เปลี่ยนเป็นพิสูจน์ตัวคี่)</li>
+                                <li><strong>"ข้อขัดแย้ง = ยอมรับว่าสิ่งที่โจทย์บอกเป็นเท็จ แล้วทำจนเจอเรื่องขัดแย้งกับความจริง"</strong></li>
+                                <li><strong>"Induction โดมิโน 2 สเต็ป":</strong> 1. เช็ก $P(1)$  2. สมมติ $P(k)$ แล้วจัดรูปส่งต่อไป $P(k+1)$</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Navigation Controls -->
-                <div class="flex items-center justify-center gap-4 max-w-md mx-auto">
-                    <button onclick="prevFlashcard()" class="px-4 py-2 rounded-xl bg-gray-800 text-gray-200 hover:bg-gray-700 text-sm font-semibold flex items-center gap-2 transition-all">
-                        <i class="fa-solid fa-arrow-left"></i> ย้อนกลับ
-                    </button>
-                    <button onclick="nextFlashcard()" class="px-6 py-2 rounded-xl bg-brand-600 text-white hover:bg-brand-500 text-sm font-semibold flex items-center gap-2 shadow-lg shadow-brand-500/20 transition-all">
-                        ถัดไป <i class="fa-solid fa-arrow-right"></i>
-                    </button>
-                </div>
             </div>
         </section>
 
@@ -634,6 +663,22 @@
                     </div>
                 </div>
 
+                <!-- Proof Methods Grid -->
+                <div class="p-4 rounded-xl bg-gray-900/90 border border-gray-800 space-y-2">
+                    <span class="font-bold text-rose-400 block text-sm">สรุปรูปแบบการพิสูจน์ (Proof Methods)</span>
+                    <ul class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                        <li class="p-2 rounded bg-gray-950 border border-gray-800">
+                            <strong class="text-white block">Contraposition:</strong> $\neg q \implies \neg p$ (แย้งสลับที่)
+                        </li>
+                        <li class="p-2 rounded bg-gray-950 border border-gray-800">
+                            <strong class="text-white block">Contradiction:</strong> สมมติ $p \land \neg q$ หาข้อขัดแย้ง
+                        </li>
+                        <li class="p-2 rounded bg-gray-950 border border-gray-800">
+                            <strong class="text-white block">Induction:</strong> $P(1) \text{ จริง } \land [P(k) \implies P(k+1)]$
+                        </li>
+                    </ul>
+                </div>
+
                 <!-- Summary Checklist -->
                 <div class="p-4 rounded-xl bg-gray-900/90 border border-gray-800 space-y-2">
                     <span class="font-bold text-emerald-400 block text-sm">Checklist คุณสมบัติความสัมพันธ์ (Relations)</span>
@@ -710,6 +755,16 @@
                 category: "บทที่ 4: Permutations",
                 question: "เรียงสับเปลี่ยนของ $n$ ชิ้นที่มีของซ้ำกันกลุ่มละ $n_1, n_2$ ชิ้น มีสูตรว่าอย่างไร?",
                 answer: "\\text{จำนวนวิธี} = \\frac{n!}{n_1! \\cdot n_2! \\dots n_k!}"
+            },
+            {
+                category: "บทที่ 5: การพิสูจน์",
+                question: "การพิสูจน์โดยแย้งสลับที่ (Proof by Contraposition) สำหรับประพจน์ $p \\implies q$ ทำอย่างไร?",
+                answer: "สมมติให้ **$\\neg q$ เป็นจริง** (ผลเป็นเท็จ) แล้วใช้เหตุผลแสดงให้ได้ว่า **$\\neg p$ เป็นจริง** (เหตุเป็นเท็จ) เพราะ $p \\implies q \\equiv \\neg q \\implies \\neg p$"
+            },
+            {
+                category: "บทที่ 5: Induction",
+                question: "2 ขั้นตอนสำคัญในการพิสูจน์ด้วย Mathematical Induction คืออะไร?",
+                answer: "1) **Base Step:** แสดงว่า $P(1)$ เป็นจริง | 2) **Inductive Step:** สมมติให้ $P(k)$ เป็นจริง แล้วพิสูจน์ว่า $P(k+1)$ เป็นจริงด้วย"
             }
         ];
 
@@ -844,6 +899,32 @@
                 ],
                 correct: 0, // Index 0 -> A
                 explanation: "<b>เฉลย A) 720 วิธี</b><br>ตำแหน่งแตกต่างกัน (ลำดับสำคัญ) ใช้ Permutation $P(10,3) = \\frac{10!}{(10-3)!} = 10 \\times 9 \\times 8 = 720$ วิธี"
+            },
+            {
+                id: 11,
+                chapter: "บทที่ 5: การพิสูจน์",
+                question: "หากต้องการพิสูจน์ว่า 'ถ้า $n^2$ เป็นจำนวนคี่ แล้ว $n$ เป็นจำนวนคี่' โดยใช้ **Proof by Contraposition** เราต้องสมมติสิ่งใด?",
+                options: [
+                    "A) สมมติให้ $n^2$ เป็นจำนวนคู่ แล้วแสดงว่า $n$ เป็นจำนวนคู่",
+                    "B) สมมติให้ $n$ เป็นจำนวนคู่ แล้วแสดงให้ได้ว่า $n^2$ เป็นจำนวนคู่",
+                    "C) สมมติให้ $n$ เป็นจำนวนคี่ แล้วแสดงว่า $n^2$ เป็นจำนวนคี่",
+                    "D) สมมติให้ $n^2$ เป็นจำนวนคี่ และ $n$ เป็นจำนวนคู่"
+                ],
+                correct: 1, // Index 1 -> B
+                explanation: "<b>เฉลย B) สมมติให้ $n$ เป็นจำนวนคู่ แล้วแสดงให้ได้ว่า $n^2$ เป็นจำนวนคู่</b><br>การพิสูจน์โดยแย้งสลับที่ของ $p \\implies q$ จะแปลงเป็น $\\neg q \\implies \\neg p$<br>• $p$: $n^2$ เป็นจำนวนคี่ $\\implies \\neg p$: $n^2$ เป็นจำนวนคู่<br>• $q$: $n$ เป็นจำนวนคี่ $\\implies \\neg q$: $n$ เป็นจำนวนคู่<br>ดังนั้นเริ่มจากสมมติ $\\neg q$ ($n$ เป็นคู่) แล้วแสดง $\\neg p$ ($n^2$ เป็นคู่)"
+            },
+            {
+                id: 12,
+                chapter: "บทที่ 5: Induction",
+                question: "ในการพิสูจน์สมการ $1 + 2 + 3 + \\dots + n = \\frac{n(n+1)}{2}$ ด้วย **Mathematical Induction** ในขั้นตอน Inductive Hypothesis สมมติฐานคืออะไร?",
+                options: [
+                    "A) $1 = \\frac{1(1+1)}{2}$",
+                    "B) $1 + 2 + \\dots + k = \\frac{k(k+1)}{2}$ เป็นจริง สำหรับบาง $k \\ge 1$",
+                    "C) $1 + 2 + \\dots + (k+1) = \\frac{(k+1)(k+2)}{2}$",
+                    "D) $n = k + 1$"
+                ],
+                correct: 1, // Index 1 -> B
+                explanation: "<b>เฉลย B) $1 + 2 + \\dots + k = \\frac{k(k+1)}{2}$ เป็นจริง สำหรับบาง $k \\ge 1$</b><br>Inductive Hypothesis ในขั้น Inductive Step คือการ **สมมติว่าประพจน์เป็นจริง ณ ตำแหน่ง $n = k$** เพื่อนำข้อสมมตินี้ไปพิสูจน์ต่อในตำแหน่ง $k + 1$"
             }
         ];
 
